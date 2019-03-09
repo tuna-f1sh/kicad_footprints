@@ -1213,9 +1213,6 @@
 [submodule "PCSmithy/S8411-45R.pretty"]
 	path = PCSmithy/S8411-45R.pretty
 	url = https://github.com/PCSmithy/S8411-45R.pretty
-[submodule "kicad-footprints"]
-	path = kicad-footprints
-	url = https://github.com/KiCad/kicad-footprints
 [submodule "sharebrained"]
 	path = sharebrained
 	url = https://github.com/sharebrained/library-kicad
