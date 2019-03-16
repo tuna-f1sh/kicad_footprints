@@ -5,6 +5,9 @@ import os
 import sys
 import codecs
 
+# not being used
+KICAD_SUBMODULE_DIR = 'null/'
+
 def print_usage():
     print('USAGE: ./generate_table <fp-lib-table path>')
 
@@ -22,6 +25,9 @@ with codecs.open(sys.argv[1], mode='w', encoding='utf8') as f:
         for filename in filenames:
             if os.path.splitext(filename)[-1] == '.kicad_mod':
                 name = os.path.relpath(dirname, os.path.curdir).replace('\\', '/')
+                # strip kicad-footprints from name to keep compatable with vanilla install
+                if KICAD_SUBMODULE_DIR in name:
+                    name = name.replace(KICAD_SUBMODULE_DIR, '')
                 uri = os.path.realpath(dirname).replace('\\', '/')
                 lib = '  (lib (name "{}")(type KiCad) (uri "{}") (options "") (descr ""))\n'.format(name, uri)
                 f.write(lib)

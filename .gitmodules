@@ -1216,3 +1216,6 @@
 [submodule "sharebrained"]
 	path = sharebrained
 	url = https://github.com/sharebrained/library-kicad
+[submodule "KiCad"]
+	path = KiCad
+	url = https://github.com/KiCad/kicad-footprints
