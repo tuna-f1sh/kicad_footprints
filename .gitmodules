@@ -1219,3 +1219,6 @@
 [submodule "KiCad"]
 	path = KiCad
 	url = https://github.com/KiCad/kicad-footprints
+[submodule "templates/FeatherWing"]
+	path = templates/FeatherWing
+	url = https://github.com/ppelleti/FeatherWing-template-KiCad
