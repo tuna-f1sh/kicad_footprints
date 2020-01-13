@@ -28,7 +28,8 @@ with codecs.open(sys.argv[1], mode='w', encoding='utf8') as f:
                 # strip kicad-footprints from name to keep compatable with vanilla install
                 if KICAD_SUBMODULE_DIR in name:
                     name = name.replace(KICAD_SUBMODULE_DIR, '')
-                uri = os.path.realpath(dirname).replace('\\', '/')
+                # uri = os.path.realpath(dirname).replace('\\', '/')
+                uri = '${USRMOD}/' + name
                 lib = '  (lib (name "{}")(type KiCad) (uri "{}") (options "") (descr ""))\n'.format(name, uri)
                 f.write(lib)
                 break
