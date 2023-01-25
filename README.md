@@ -47,6 +47,14 @@ You will need to restart KiCad for this change to take effect.
 
 _Warning: This will overwrite your existing fp-lib-table, discard any customization you made to it and also switch to using our copy of the "official" libraries included with KiCad (these are henceforth prefixed with `kicad-official/`). In our instructions below we make a backup copy of the fp-lib-table so can restore it if you need to._
 
+#### Generate Options
+
+Options can be supplied as environment args:
+
+- KICAD_OFFICIAL_SUBMODULE_STRIP='kicad-official/' - Strip the module path from the name of the official library in order to maintain compatibility with the default footprint paths assigned to lib symbols.
+- KICAD_ENV_SUBSTITUTION='${USRMOD}' - Use a KiCad path substitution variable rather than the real path to the module.
+- KICAD_OFFICIAL_FOOTPRINT_DIR='/Applications/KiCad/KiCad.app/Contents/SharedSupport/footprints/' - Walk the official footprints supplied by KiCad distribution in addition to modules.
+
 #### Linux
 
     cp ~/.config/kicad/6.0/fp-lib-table ~/.config/kicad/6.0/fp-lib-table.backup
