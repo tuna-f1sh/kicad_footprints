@@ -1702,3 +1702,6 @@
 [submodule "Seeed-Studio/OPL_Kicad_Library"]
 	path = Seeed-Studio/OPL_Kicad_Library
 	url = https://github.com/Seeed-Studio/OPL_Kicad_Library
+[submodule "tuna-f1sh/jbr-kicad"]
+	path = tuna-f1sh/jbr-kicad
+	url = git@github.com:tuna-f1sh/jbr-kicad.git
