@@ -53,11 +53,7 @@ _Warning: This will overwrite your existing fp-lib-table, discard any customizat
 
 #### Generate Options
 
-Options can be supplied as environment args:
-
-- KICAD_OFFICIAL_SUBMODULE_STRIP='kicad-official/' - Strip the module path from the name of the official library in order to maintain compatibility with the default footprint paths assigned to lib symbols.
-- KICAD_ENV_SUBSTITUTION='${USRMOD}' - Use a KiCad path substitution variable rather than the real path to the module.
-- KICAD_OFFICIAL_FOOTPRINT_DIR='/Applications/KiCad/KiCad.app/Contents/SharedSupport/footprints/' - Walk the official footprints supplied by KiCad distribution in addition to modules.
+Options can be supplied, see `./generate_table --help`.
 
 #### Linux
 
