@@ -2,7 +2,6 @@
 
 from __future__ import print_function
 import os
-import sys
 import codecs
 import argparse
 
@@ -13,13 +12,13 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('filepath', help='File path to write table data. Will create if missing and overwrite if existing. Default locations: Linux ~/.config/kicad/6.0/fp-lib-table; macOS ~/Library/Preferences/kicad/6.0/fp-lib-table; Windows ~/AppData/Roaming/kicad/6.0/fp-lib-table')
 parser.add_argument('-s', '--substitution-path', type=str, help='Use this as a substiution path variable rather than the real path; ${USRMOD} for example')
-parser.add_argument('-S', '--strip', type=str, help="Strip module name from the name matching this - 'kicad-official' for example. Useful to maintain compatability with default footprints in default lib")
+parser.add_argument('-S', '--official-strip', type=str, help="Strip module name and .pretty from the name matching this - 'kicad-official' for example. Useful to maintain compatability with official default fp_lib_table in default lib")
 parser.add_argument('-d', '--official-dir', type=str, help="Add footprints supplied with KiCad distribution at this directory, using default naming")
 parser.add_argument('-D', '--official-sub', type=str, default="${KICAD6_FOOTPRINT_DIR}", help="KiCad substitution path variable for official_dir")
 
 args = parser.parse_args()
 
-if args.strip is not None:
+if args.official_strip is not None:
     print(f'Stipping module names starting with {args.strip}')
 
 if args.substitution_path is not None:
@@ -44,18 +43,18 @@ def walk_directory(path: str, f, substitution=None, strip=None, basename=False):
                 else:
                     uri = os.path.realpath(dirname).replace('\\', '/')
 
-                # strip kicad-footprints from name to keep compatable with vanilla install
+                # strip kicad-footprints from name and .pretty to keep compatable with vanilla install
                 if strip is not None:
                     if name.startswith(strip):
-                        name = name.replace(strip, '').strip('.pretty')
+                        name = os.path.splitext(name.replace(strip, ''))[0]
 
                 lib = '  (lib (name "{}")(type KiCad) (uri "{}") (options "") (descr ""))\n'.format(name, uri)
                 f.write(lib)
                 break
 
-with codecs.open(sys.argv[1], mode='w', encoding='utf8') as f:
+with codecs.open(args.filepath, mode='w', encoding='utf8') as f:
     f.write('(fp_lib_table')
-    walk_directory(os.path.curdir, f, substitution=args.substitution_path, strip=args.strip)
+    walk_directory(os.path.curdir, f, substitution=args.substitution_path, strip=args.official_strip)
     if args.official_dir is not None and os.path.exists(args.official_dir):
         walk_directory(args.official_dir, f, substitution=args.official_sub, strip='', basename=True)
     f.write(')')
