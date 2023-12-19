@@ -229,9 +229,6 @@
 [submodule "kicad-legacy/Wire_Pads.pretty"]
 	path = kicad-legacy/Wire_Pads.pretty
 	url = https://github.com/KiCad/Wire_Pads.pretty/
-[submodule "Tinkerforge/kicad-libraries"]
-	path = Tinkerforge/kicad-libraries
-	url = https://github.com/Tinkerforge/kicad-libraries
 [submodule "bronoeagle/kicad-open-modules"]
 	path = brunoeagle/kicad-open-modules
 	url = https://github.com/brunoeagle/kicad-open-modules
@@ -301,9 +298,6 @@
 [submodule "ohdsp/KiCad-Libs"]
 	path = ohdsp/KiCad-Libs
 	url = https://github.com/ohdsp/KiCad-Libs
-[submodule "xesscorp/xess.pretty"]
-	path = xesscorp/xess.pretty
-	url = https://github.com/xesscorp/xess.pretty
 [submodule "OLIMEX/KiCAD"]
 	path = OLIMEX/KiCAD
 	url = https://github.com/OLIMEX/KiCAD
@@ -967,9 +961,6 @@
 [submodule "F6ITU/Kicad_Modules"]
 	path = F6ITU/Kicad_Modules
 	url = https://github.com/F6ITU/Kicad_Modules
-[submodule "natsfr/kicad-components"]
-	path = natsfr/kicad-components
-	url = https://github.com/natsfr/kicad-components
 [submodule "cepr/Bluetooth_Modules.pretty"]
 	path = cepr/Bluetooth_Modules.pretty
 	url = https://github.com/cepr/Bluetooth_Modules.pretty
