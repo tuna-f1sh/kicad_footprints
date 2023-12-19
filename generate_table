@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser(
                     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                     description = 'Generates KiCad fp_lib_table footprint lookup')
 
-parser.add_argument('filepath', help='File path to write table data. Will create if missing and overwrite if existing. Default locations: Linux ~/.config/kicad/6.0/fp-lib-table; macOS ~/Library/Preferences/kicad/6.0/fp-lib-table; Windows ~/AppData/Roaming/kicad/6.0/fp-lib-table')
+parser.add_argument('filepath', help='File path to write table data. Will create if missing and overwrite if existing. Default locations: Linux ~/.config/kicad/7.0/fp-lib-table; macOS ~/Library/Preferences/kicad/7.0/fp-lib-table; Windows ~/AppData/Roaming/kicad/7.0/fp-lib-table')
 parser.add_argument('-s', '--substitution-path', type=str, help='Use this as a substiution path variable rather than the real path; ${USRMOD} for example')
 parser.add_argument('-S', '--official-strip', type=str, help="Strip module name and .pretty from the name matching this - 'kicad-official' for example. Useful to maintain compatability with official default fp_lib_table in default lib")
 parser.add_argument('-d', '--official-dir', type=str, help="Add footprints supplied with KiCad distribution at this directory, using default naming")
@@ -29,6 +29,8 @@ def walk_directory(path: str, f, substitution=None, strip=None, basename=False):
         # don't go into any .git directories.
         if '.git' in dirnames:
             dirnames.remove('.git')
+        if 'Pre_v7' in dirnames:
+            dirnames.remove('Pre_v7')
 
         for filename in filenames:
             if os.path.splitext(filename)[-1] == '.kicad_mod':
