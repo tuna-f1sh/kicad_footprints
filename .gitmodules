@@ -334,9 +334,6 @@
 [submodule "MacroFab/EDALibraries"]
 	path = MacroFab/EDALibraries
 	url = https://github.com/MacroFab/EDALibraries
-[submodule "nqbit/NQBit.pretty"]
-	path = nqbit/NQBit.pretty
-	url = https://github.com/nqbit/NQBit.pretty
 [submodule "jerome-labidurie/d1_mini_kicad"]
 	path = jerome-labidurie/d1_mini_kicad
 	url = https://github.com/jerome-labidurie/d1_mini_kicad
@@ -1495,9 +1492,6 @@
 [submodule "50an6xy06r6n/keyboard_reversible.pretty"]
 	path = 50an6xy06r6n/keyboard_reversible.pretty
 	url = https://github.com/50an6xy06r6n/keyboard_reversible.pretty
-[submodule "nqbit/nqbit.pretty"]
-	path = nqbit/nqbit.pretty
-	url = https://github.com/nqbit/nqbit.pretty
 [submodule "nxmq/animegirlsare.pretty"]
 	path = nxmq/animegirlsare.pretty
 	url = https://github.com/nxmq/animegirlsare.pretty
