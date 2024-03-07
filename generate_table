@@ -10,11 +10,11 @@ parser = argparse.ArgumentParser(
                     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                     description = 'Generates KiCad fp_lib_table footprint lookup')
 
-parser.add_argument('filepath', help='File path to write table data. Will create if missing and overwrite if existing. Default locations: Linux ~/.config/kicad/7.0/fp-lib-table; macOS ~/Library/Preferences/kicad/7.0/fp-lib-table; Windows ~/AppData/Roaming/kicad/7.0/fp-lib-table')
+parser.add_argument('filepath', help='File path to write table data. Will create if missing and overwrite if existing. Default locations: Linux ~/.config/kicad/8.0/fp-lib-table; macOS ~/Library/Preferences/kicad/8.0/fp-lib-table; Windows ~/AppData/Roaming/kicad/8.0/fp-lib-table')
 parser.add_argument('-s', '--substitution-path', type=str, help='Use this as a substiution path variable rather than the real path; ${USRMOD} for example')
 parser.add_argument('-S', '--official-strip', type=str, help="Strip module name and .pretty from the name matching this - 'kicad-official' for example. Useful to maintain compatability with official default fp_lib_table in default lib")
 parser.add_argument('-d', '--official-dir', type=str, help="Add footprints supplied with KiCad distribution at this directory, using default naming")
-parser.add_argument('-D', '--official-sub', type=str, default="${KICAD7_FOOTPRINT_DIR}", help="KiCad substitution path variable for official_dir")
+parser.add_argument('-D', '--official-sub', type=str, default="${KICAD8_FOOTPRINT_DIR}", help="KiCad substitution path variable for official_dir")
 
 args = parser.parse_args()
 
@@ -23,6 +23,10 @@ if args.official_strip is not None:
 
 if args.substitution_path is not None:
     print(f'Substituting real path to KiCad env {args.substitution_path}')
+
+if args.filepath is None:
+    print('No file path supplied')
+    exit(1)
 
 def walk_directory(path: str, f, substitution=None, strip=None, basename=False):
     for dirname, dirnames, filenames in os.walk(path):
