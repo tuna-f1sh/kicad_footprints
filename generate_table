@@ -6,13 +6,13 @@ import codecs
 import argparse
 import platform
 
-def get_sys_filepath():
+def get_kicad_conf_dir():
     if platform.system() == 'Darwin':
-        return os.path.expanduser('~/Library/Preferences/kicad/8.0/fp-lib-table')
+        return os.path.expanduser('~/Library/Preferences/kicad/8.0')
     elif platform.system() == 'Windows':
-        return os.path.expanduser('~/AppData/Roaming/kicad/8.0/fp-lib-table')
+        return os.path.expanduser('~/AppData/Roaming/kicad/8.0')
     else:
-        return os.path.expanduser('~/.config/kicad/8.0/fp-lib-table')
+        return os.path.expanduser('~/.config/kicad/8.0')
 
 def get_official_dir():
     if platform.system() == 'Darwin':
@@ -22,7 +22,7 @@ def get_official_dir():
     else:
         return os.path.expanduser('/usr/share/kicad')
 
-def walk_directory_find_pretty(path: str, f, substitution=None, strip=None, basename=False):
+def walk_directory_find_pretty(path: str, f, substitution='${KICAD8_FOOTPRINT_DIR}', strip=None, basename=False):
     for dirname, dirnames, filenames in os.walk(path):
         # don't go into any .git directories.
         if '.git' in dirnames:
@@ -52,12 +52,52 @@ def walk_directory_find_pretty(path: str, f, substitution=None, strip=None, base
                 f.write(lib)
                 break
 
+def walk_directory_find_libs(path: str, f, substitution='${KICAD8_SYMBOL_DIR}', extensions=['.kicad_sym', '.lib'], basename=False):
+    for _, dirnames, filenames in os.walk(path):
+        # don't go into any .git directories.
+        if '.git' in dirnames:
+            dirnames.remove('.git')
+
+        for filename in filenames:
+            if os.path.splitext(filename)[-1] in extensions:
+                if basename:
+                    name = os.path.basename(filename).replace('\\', '/')
+                else:
+                    name = os.path.relpath(filename, os.path.curdir).replace('\\', '/')
+
+                if os.path.splitext(filename)[-1] == '.lib':
+                    lib_type = 'Legacy'
+                else:
+                    lib_type = 'KiCad'
+
+                # use KiCad env substitution if supplied, else real path
+                if substitution is not None:
+                    uri = os.path.join(substitution, name)
+                else:
+                    uri = os.path.realpath(filename).replace('\\', '/')
+
+                # strip kicad-footprints from name and extension to keep compatable with vanilla install
+                name = os.path.basename(name).split('.')[0]
+
+                lib = '  (lib (name "{}")(type {}) (uri "{}") (options "") (descr ""))\n'.format(name, lib_type, uri)
+                f.write(lib)
+
 def generate_fp_lib_table(args):
     with codecs.open(args.filepath, mode='w', encoding='utf8') as f:
-        f.write('(fp_lib_table')
-        walk_directory_find_pretty(os.path.curdir, f, substitution=args.substitution_path, strip=args.official_strip)
+        f.write('(fp_lib_table\n')
+        f.write('  (version 7)\n')
+        walk_directory_find_pretty(os.path.curdir, f, substitution=args.substitution_path, strip=None)
         if not args.no_official and args.official_dir is not None and os.path.exists(args.official_dir):
-            walk_directory_find_pretty(os.path.join(args.official_dir, 'footprints'), f, substitution=args.official_sub, strip='', basename=True)
+            walk_directory_find_pretty(os.path.join(args.official_dir, 'footprints'), f, strip='', basename=True)
+        f.write(')')
+
+def generate_sym_lib_table(args):
+    with codecs.open(args.filepath, mode='w', encoding='utf8') as f:
+        f.write('(sym_lib_table\n')
+        f.write('  (version 7)\n')
+        walk_directory_find_libs(os.path.curdir, f, substitution=args.substitution_path)
+        if not args.no_official and args.official_dir is not None and os.path.exists(args.official_dir):
+            walk_directory_find_libs(os.path.join(args.official_dir, 'symbols'), f, basename=True)
         f.write(')')
 
 parser = argparse.ArgumentParser(
@@ -65,19 +105,13 @@ parser = argparse.ArgumentParser(
                     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                     description = 'Generates KiCad fp_lib_table footprint lookup')
 
-parser.add_argument('-f', '--filepath', default=get_sys_filepath(), help='File path to write table data. Will create if missing and overwrite if existing. Default locations: Linux ~/.config/kicad/8.0/fp-lib-table; macOS ~/Library/Preferences/kicad/8.0/fp-lib-table; Windows ~/AppData/Roaming/kicad/8.0/fp-lib-table')
+parser.add_argument('-f', '--filepath', default=get_kicad_conf_dir(), help='File path to write table data. Will create if missing and overwrite if existing. Default locations: Linux ~/.config/kicad/8.0; macOS ~/Library/Preferences/kicad/8.0; Windows ~/AppData/Roaming/kicad/8.0')
+parser.add_argument('-t', '--table', choices=['footprint', 'symbol'], default='footprint', help='Type of table to generate')
 parser.add_argument('-s', '--substitution-path', type=str, help='Use this as a substiution path variable rather than the real path; ${USRMOD} for example')
-parser.add_argument('-S', '--official-strip', type=str, help="Strip module name and .pretty from the name matching this - 'kicad-official' for example. Useful to maintain compatability with official default fp_lib_table in default lib")
-parser.add_argument('-n', '--no-official', action='store_true', help="Don't include the official KiCad footprints in the table")
 parser.add_argument('-d', '--official-dir', default=get_official_dir(), type=str, help="Add footprints supplied with KiCad distribution at this directory, using default naming")
-parser.add_argument('-D', '--official-sub', type=str, default="${KICAD8_FOOTPRINT_DIR}", help="KiCad substitution path variable for official_dir")
+parser.add_argument('-n', '--no-official', action='store_true', help="Don't include the official KiCad footprints in the table")
 
 args = parser.parse_args()
-
-print(f'Generating to fp_lib_table {args.filepath}')
-
-if args.official_strip is not None:
-    print(f'Stipping module names starting with {args.strip}')
 
 if args.substitution_path is not None:
     print(f'Substituting real path to KiCad env {args.substitution_path}')
@@ -86,4 +120,11 @@ if args.filepath is None:
     print('No file path supplied')
     exit(1)
 
-generate_fp_lib_table(args)
+if args.table == 'footprint':
+    args.filepath = os.path.join(args.filepath, 'fp-lib-table')
+    print(f'Generating to fp_lib_table {args.filepath}')
+    generate_fp_lib_table(args)
+elif args.table == 'symbol':
+    args.filepath = os.path.join(args.filepath, 'sym-lib-table')
+    print(f'Generating to sym_lib_table {args.filepath}')
+    generate_sym_lib_table(args)
