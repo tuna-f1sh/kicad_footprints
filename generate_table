@@ -53,7 +53,7 @@ def walk_directory_find_pretty(path: str, f, substitution='${KICAD8_FOOTPRINT_DI
                 break
 
 def walk_directory_find_libs(path: str, f, substitution='${KICAD8_SYMBOL_DIR}', extensions=['.kicad_sym', '.lib'], basename=False):
-    for _, dirnames, filenames in os.walk(path):
+    for dirname, dirnames, filenames in os.walk(path):
         # don't go into any .git directories.
         if '.git' in dirnames:
             dirnames.remove('.git')
@@ -74,7 +74,8 @@ def walk_directory_find_libs(path: str, f, substitution='${KICAD8_SYMBOL_DIR}', 
                 if substitution is not None:
                     uri = os.path.join(substitution, name)
                 else:
-                    uri = os.path.realpath(filename).replace('\\', '/')
+                    filepath = os.path.join(dirname, filename)
+                    uri = os.path.realpath(filepath).replace('\\', '/')
 
                 # strip kicad-footprints from name and extension to keep compatable with vanilla install
                 name = os.path.basename(name).split('.')[0]
