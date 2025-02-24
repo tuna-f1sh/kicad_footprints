@@ -8,11 +8,11 @@ import platform
 
 def get_kicad_conf_dir():
     if platform.system() == 'Darwin':
-        return os.path.expanduser('~/Library/Preferences/kicad/8.0')
+        return os.path.expanduser('~/Library/Preferences/kicad/9.0')
     elif platform.system() == 'Windows':
-        return os.path.expanduser('~/AppData/Roaming/kicad/8.0')
+        return os.path.expanduser('~/AppData/Roaming/kicad/9.0')
     else:
-        return os.path.expanduser('~/.config/kicad/8.0')
+        return os.path.expanduser('~/.config/kicad/9.0')
 
 def get_official_dir():
     if platform.system() == 'Darwin':
@@ -22,7 +22,7 @@ def get_official_dir():
     else:
         return os.path.expanduser('/usr/share/kicad')
 
-def walk_directory_find_pretty(path: str, f, substitution='${KICAD8_FOOTPRINT_DIR}', strip=None, basename=False):
+def walk_directory_find_pretty(path: str, f, substitution='${KICAD9_FOOTPRINT_DIR}', strip=None, basename=False):
     for dirname, dirnames, filenames in os.walk(path):
         # don't go into any .git directories.
         if '.git' in dirnames:
@@ -52,7 +52,7 @@ def walk_directory_find_pretty(path: str, f, substitution='${KICAD8_FOOTPRINT_DI
                 f.write(lib)
                 break
 
-def walk_directory_find_libs(path: str, f, substitution='${KICAD8_SYMBOL_DIR}', extensions=['.kicad_sym', '.lib'], basename=False):
+def walk_directory_find_libs(path: str, f, substitution='${KICAD9_SYMBOL_DIR}', extensions=['.kicad_sym', '.lib'], basename=False):
     for dirname, dirnames, filenames in os.walk(path):
         # don't go into any .git directories.
         if '.git' in dirnames:
@@ -106,7 +106,7 @@ parser = argparse.ArgumentParser(
                     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                     description = 'Generates KiCad fp_lib_table footprint lookup')
 
-parser.add_argument('-f', '--filepath', default=get_kicad_conf_dir(), help='File path to write table data. Will create if missing and overwrite if existing. Default locations: Linux ~/.config/kicad/8.0; macOS ~/Library/Preferences/kicad/8.0; Windows ~/AppData/Roaming/kicad/8.0')
+parser.add_argument('-f', '--filepath', default=get_kicad_conf_dir(), help='File path to write table data. Will create if missing and overwrite if existing. Default locations: Linux ~/.config/kicad/9.0; macOS ~/Library/Preferences/kicad/9.0; Windows ~/AppData/Roaming/kicad/9.0')
 parser.add_argument('-t', '--table', choices=['footprint', 'symbol'], default='footprint', help='Type of table to generate')
 parser.add_argument('-s', '--substitution-path', type=str, help='Use this as a substiution path variable rather than the real path; ${USRMOD} for example')
 parser.add_argument('-d', '--official-dir', default=get_official_dir(), type=str, help="Add footprints supplied with KiCad distribution at this directory, using default naming")
